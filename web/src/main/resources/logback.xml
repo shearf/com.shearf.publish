@@ -1,0 +1,92 @@
+<configuration debug="true">
+    <contextName>publish</contextName>
+    <property name="publish.log.pattern" value="[%d{'MM-dd HH:mm:ss,SSS',GMT+8:00}] %-5p [%.10t][%X{CU}] %logger{36}[%L] - %m%n" />
+    <property name="publish.log.charset" value="UTF-8" />
+    <property name="publish.log.maxHistory" value="300" />
+    <property name="publish.log.root" value="${logging.dir}" />
+    <property name="publish.log.sizeAndTime" value="100MB" />
+
+    <appender name="StdoutLogger" class="ch.qos.logback.core.ConsoleAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>DEBUG</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <encoder>
+            <charset>${publish.log.charset}</charset>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="DB" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${publish.log.root}db.log</file>
+        <append>true</append>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${publish.log.root}db.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>${publish.log.maxHistory}</maxHistory>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <MaxFileSize>${publish.log.sizeAndTime}</MaxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <encoder>
+            <charset>${publish.log.charset}</charset>
+            <pattern>${publish.log.pattern}</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="SERVICE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${publish.log.root}service.log</file>
+        <append>true</append>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${publish.log.root}service.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>${publish.log.maxHistory}</maxHistory>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <MaxFileSize>${publish.log.sizeAndTime}</MaxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <encoder>
+            <charset>${publish.log.charset}</charset>
+            <pattern>${publish.log.pattern}</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${publish.log.root}error.log</file>
+        <append>true</append>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${publish.log.root}error.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>${publish.log.maxHistory}</maxHistory>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <MaxFileSize>${publish.log.sizeAndTime}</MaxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <encoder>
+            <charset>${publish.log.charset}</charset>
+            <pattern>${publish.log.pattern}</pattern>
+        </encoder>
+    </appender>
+
+    <!-- mybatis log configure -->
+    <logger name="com.shearf.publish.dao.mapper" level="${logging.level}" additivity="false">
+        <appender-ref ref="DB" />
+        <if condition='"DEBUG".equalsIgnoreCase(property("logging.level"))'>
+            <then>
+                <appender-ref ref="StdoutLogger" />
+            </then>
+        </if>
+    </logger>
+
+    <logger name="com.shearf.publish.service" level="INFO" additivity="false">
+        <appender-ref ref="SERVICE" />
+        <if condition='"DEBUG".equalsIgnoreCase(property("logging.level"))'>
+            <then>
+                <appender-ref ref="StdoutLogger" />
+            </then>
+        </if>
+    </logger>
+
+    <root level="${logging.level}">
+        <appender-ref ref="ERROR" />
+        <appender-ref ref="StdoutLogger" />
+    </root>
+</configuration>

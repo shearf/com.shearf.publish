@@ -12,5 +12,23 @@
     <artifactId>publish-service</artifactId>
     <packaging>jar</packaging>
 
+    <dependencies>
+        <dependency>
+            <groupId>com.shearf.publish</groupId>
+            <artifactId>publish-dao</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.shearf.publish</groupId>
+            <artifactId>publish-bizobject</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.shearf.publish</groupId>
+            <artifactId>publish-common</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.shearf.publish</groupId>
+            <artifactId>publish-domain</artifactId>
+        </dependency>
+    </dependencies>
 
 </project>
