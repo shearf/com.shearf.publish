@@ -33,6 +33,12 @@ public class Response<T> implements Serializable {
         this.message = message;
     }
 
+    public static <T> Response<T> success(T data) {
+        Response<T> response = new Response<T>(GlobalError.SUCCESS);
+        response.setData(data);
+        return response;
+    }
+
     public static <T> Response<T> success() {
         return new Response<T>(GlobalError.SUCCESS);
     }
